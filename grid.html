@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gayathri | Portfolio & Registration</title>
+  <style>
+    /* Global Styles */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background: linear-gradient(120deg, #9cabef, #764ba2);
+      color: #fff;
+      line-height: 1.6;
+    }
+    header {
+      text-align: center;
+      padding: 50px 20px;
+    }
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+    header p {
+      font-size: 1.1rem;
+      color: #e0e0e0;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+
+    /* About Me Card */
+    .about {
+      background: rgba(3, 85, 101, 0.681);
+      padding: 30px;
+      border-radius: 12px;
+      margin-bottom: 40px;
+      text-align: center;
+    }
+    .about h2 { margin-bottom: 10px; }
+    .about p { color: #dbeef0f7; }
+
+    /* Form Card */
+    .form-card {
+      background: #ae717169;
+      color: #333;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(192, 211, 134, 0.614);
+    }
+    .form-card h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #021419;
+    }
+    label {
+      display: block;
+      margin: 12px 0 6px;
+      font-weight: 600;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #ae77a08a;
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+    textarea { resize: vertical; min-height: 80px; }
+    .gender {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 16px;
+    }
+    .gender label { font-weight: normal; }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(90deg, #667eea, #8a799ad5);
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+    button:hover {
+      transform: scale(1.02);
+      background: linear-gradient(90deg, #5a67d8, #6b46c1);
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #ddd;
+      font-size: 14px;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Hi, I'm Gayathri 👋</h1>
+    <p>Aspiring Web Developer | Creative Thinker | Lifelong Learner</p>
+  </header>
+
+  <main class="container">
+    <!-- About Section -->
+    <section class="about">
+      <h2>About Me</h2>
+      <p>
+        Welcome to my portfolio! I enjoy building beautiful and functional web applications.  
+        Below, you can find a student registration form I created as part of my practice projects.
+      </p>
+    </section>
+
+    <!-- Registration Form -->
+    <section class="form-card">
+      <h2>Student Registration Form</h2>
+      <form action="#" method="post">
+        <label for="fname">First Name</label>
+        <input type="text" id="fname" name="fname" placeholder="Enter first name" required>
+
+        <label for="lname">Last Name</label>
+        <input type="text" id="lname" name="lname" placeholder="Enter last name" required>
+
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" placeholder="Enter email" required>
+
+        <label for="phone">Phone</label>
+        <input type="tel" id="phone" name="phone" placeholder="Enter phone number" required>
+
+        <label for="dob">Date of Birth</label>
+        <input type="date" id="dob" name="dob" required>
+
+        <label>Gender</label>
+        <div class="gender">
+          <label><input type="radio" name="gender" value="Male" required> Male</label>
+          <label><input type="radio" name="gender" value="Female"> Female</label>
+          <label><input type="radio" name="gender" value="Other"> Other</label>
+        </div>
+
+        <label for="address">Address</label>
+        <textarea id="address" name="address" placeholder="Enter address" required></textarea>
+
+        <label for="course">Course</label>
+        <select id="course" name="course" required>
+          <option value="">--Select Course--</option>
+          <option value="B.Sc">B.Sc</option>
+          <option value="B.Com">B.Com</option>
+          <option value="B.Tech">B.Tech</option>
+          <option value="MBA">MBA</option>
+        </select>
+
+        <button type="submit">Register</button>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    © <script>document.write(new Date().getFullYear());</script> Gayathri | Portfolio Website
+  </footer>
+</body>
+</html>

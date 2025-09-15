@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gayathri G | Portfolio</title>
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --primary: #ff6f61;   /* sunset coral */
+      --accent: #ff9a76;    /* warm orange */
+      --bg: #fff5f0;        /* soft peach */
+      --card-bg: #ffffff1f;
+      --text: #222;
+      --shadow: 0 4px 24px rgba(0,0,0,0.1);
+    }
+    [data-theme="dark"] {
+      --bg: #121212;
+      --card-bg: #1e1e1e;
+      --text: #eee;
+      --primary: #d86c70;
+      --accent: #f2a65a;
+    }
+
+    * { box-sizing: border-box; scroll-behavior: smooth; transition: background 0.3s, color 0.3s; }
+    body { margin: 0; font-family: 'Montserrat', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+
+    /* Animated header */
+    header {
+      background: linear-gradient(270deg, #ff6f61, #ff9a76, #d86c70, #f2a65a);
+      background-size: 800% 800%;
+      animation: gradientShift 12s ease infinite;
+      color: #fff;
+      padding: 3rem 1rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    header h1 { margin: 0; font-size: 3rem; letter-spacing: 2px; }
+    header p { margin: 0.5rem 0; font-size: 1.2rem; font-weight: 400; }
+    header .email { margin-top: 0.5rem; font-size: 1rem; font-weight: 500; }
+
+    nav { margin-top: 1rem; }
+    nav a {
+      color: #fff; text-decoration: none; margin: 0 1rem;
+      font-weight: 700; position: relative;
+    }
+    nav a::after {
+      content: ""; position: absolute; width: 0; height: 2px; left: 0; bottom: -4px;
+      background: var(--accent); transition: width 0.3s;
+    }
+    nav a:hover::after { width: 100%; }
+
+    .toggle-btn {
+      position: absolute; top: 1rem; right: 1rem;
+      background: var(--accent); border: none; border-radius: 50%;
+      padding: 0.5rem 0.6rem; cursor: pointer;
+      font-size: 1rem; color: #fff; box-shadow: var(--shadow);
+    }
+
+    /* Floating blobs */
+    .blob {
+      position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.4; z-index: -1;
+      animation: blobMove 20s infinite alternate ease-in-out;
+    }
+    .blob1 { width: 300px; height: 300px; background: #ff6f61; top: -50px; left: -80px; }
+    .blob2 { width: 400px; height: 400px; background: #ff9a76; bottom: -100px; right: -100px; }
+    @keyframes blobMove {
+      0% { transform: translate(0,0) scale(1); }
+      100% { transform: translate(50px, -50px) scale(1.2); }
+    }
+
+    .container { max-width: 1100px; margin: 2rem auto; padding: 0 1rem; }
+    .section-title { font-size: 2rem; margin-bottom: 1rem; color: var(--primary); text-align: center; }
+
+    /* About */
+    .about {
+      display: flex; flex-wrap: wrap; align-items: center;
+      background: var(--card-bg); box-shadow: var(--shadow);
+      border-radius: 12px; padding: 2rem; margin-bottom: 2rem;
+    }
+    .about-img {
+      width: 180px; height: 180px;
+      margin-right: 2rem;
+      border-radius: 50%; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--primary); color: #fff;
+      font-size: 3rem; font-weight: 700;
+      box-shadow: var(--shadow);
+    }
+    .about-text { flex: 2 1 300px; }
+
+    /* Skills */
+    .skills { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin-bottom: 2rem; }
+    .skill-card {
+      background: var(--card-bg); box-shadow: var(--shadow);
+      border-radius: 25px; padding: 0.8rem 2rem;
+      font-weight: 700; color: var(--primary); transition: 0.3s;
+    }
+    .skill-card:hover { transform: scale(1.1); background: var(--accent); color: #fff; animation: pulse 0.6s; }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.15); }
+      100% { transform: scale(1.1); }
+    }
+
+    /* Projects */
+    .projects {
+      display: flex; flex-direction: column;
+      gap: 2rem; margin-bottom: 2rem;
+    }
+    .project-card {
+      display: flex; align-items: stretch; gap: 1rem;
+      background: var(--card-bg); border-radius: 15px;
+      overflow: hidden; box-shadow: var(--shadow);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .project-card:hover { transform: translateY(-6px) scale(1.02); box-shadow: 0 8px 32px rgba(0,0,0,0.2); }
+    .project-img { flex: 1; min-width: 200px; object-fit: cover; }
+    .project-content {
+      flex: 2; padding: 1.5rem;
+      display: flex; flex-direction: column; justify-content: center;
+    }
+    .project-title { font-size: 1.5rem; color: var(--primary); margin-bottom: 0.5rem; }
+    .project-desc { margin: 0.5rem 0 1rem; line-height: 1.5; }
+    .tags { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+    .tag {
+      background: var(--accent); color: #fff;
+      padding: 0.2rem 0.6rem; border-radius: 12px;
+      font-size: 0.8rem; font-weight: 700;
+    }
+    .project-link {
+      align-self: flex-start; text-decoration: none;
+      background: var(--primary); color: #fff; padding: 0.5rem 1rem;
+      border-radius: 6px; font-weight: 700; transition: background 0.3s;
+    }
+    .project-link:hover { background: var(--accent); }
+
+    /* Contact */
+    form {
+      background: var(--card-bg); box-shadow: var(--shadow);
+      border-radius: 8px; padding: 2rem; max-width: 500px; margin: 0 auto;
+    }
+    form input, form textarea {
+      width: 100%; padding: 0.7rem; border-radius: 6px;
+      border: 1px solid #ccc; margin-bottom: 1rem; font-family: inherit;
+    }
+    form button {
+      background: var(--primary); color: #fff; padding: 0.7rem 2rem;
+      border: none; border-radius: 6px; font-weight: 700; cursor: pointer;
+    }
+    form button:hover { background: var(--accent); }
+
+    footer { background: var(--primary); color: #fff; text-align: center; padding: 2rem 1rem; margin-top: 2rem; }
+    .socials { margin-top: 1rem; }
+    .socials a { margin: 0 0.5rem; color: #fff; font-size: 1.3rem; text-decoration: none; }
+    .socials a:hover { color: var(--accent); }
+
+    @media (max-width: 800px) {
+      .project-card { flex-direction: column; }
+      .project-img { width: 100%; min-height: 180px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="blob blob1"></div>
+    <div class="blob blob2"></div>
+    <button class="toggle-btn" id="themeToggle">🌙</button>
+    <h1>Gayathri G</h1>
+    <p id="typing"></p>
+    <p class="email">📧 gayathri@gmail.com</p>
+    <nav>
+      <a href="#skills">Skills</a>
+      <a href="#about">About</a>
+      <a href="#projects">Projects</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <!-- Skills -->
+    <section id="skills">
+      <h2 class="section-title">Skills</h2>
+      <div class="skills">
+        <div class="skill-card">HTML5</div>
+        <div class="skill-card">CSS3</div>
+        <div class="skill-card">JavaScript</div>
+        <div class="skill-card">Python</div>
+        <div class="skill-card">Node.js</div>
+        <div class="skill-card">React</div>
+        <div class="skill-card">Git & GitHub</div>
+        <div class="skill-card">UI/UX Design</div>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section id="about" class="about">
+      <div class="about-img">G</div>
+      <div class="about-text">
+        <h2 class="section-title">About Me</h2>
+        <p>Hello! I'm <strong>Gayathri G</strong>, a passionate and detail-oriented <em>Full Stack Developer</em>. I love crafting clean, responsive, and user-friendly web applications that bring ideas to life.</p>
+        <p>With a strong foundation in <b>JavaScript, React, Node.js</b>, and modern UI/UX practices, I enjoy solving problems, learning new technologies, and continuously improving my skills.</p>
+        <p>Beyond coding, I’m curious about design, enjoy creative challenges, and believe in writing code that is as elegant as the interfaces users see.</p>
+      </div>
+    </section>
+
+    <!-- Projects -->
+    <section id="projects">
+      <h2 class="section-title">Projects</h2>
+      <div class="projects">
+        <div class="project-card">
+          <img class="project-img" src="https://images.unsplash.com/photo-1588776814546-46e9d3d2d909?auto=format&fit=crop&w=500&q=80" alt="Doctor Appointment Website"/>
+          <div class="project-content">
+            <div class="project-title">Doctor Appointment Website</div>
+            <div class="tags"><span class="tag">React</span><span class="tag">CSS</span></div>
+            <div class="project-desc">A responsive web platform for booking doctor appointments online.</div>
+            <a class="project-link" href="#">View Project</a>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <img class="project-img" src="https://images.unsplash.com/photo-1581090700227-4c4c1e1e4b8f?auto=format&fit=crop&w=500&q=80" alt="Healthcare"/>
+          <div class="project-content">
+            <div class="project-title">Healthcare</div>
+            <div class="tags"><span class="tag">MERN</span><span class="tag">API</span></div>
+            <div class="project-desc">A full-stack healthcare management app with patient and doctor dashboards.</div>
+            <a class="project-link" href="#">View Project</a>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <img class="project-img" src="https://images.unsplash.com/photo-1501973801540-537f08ccae7b?auto=format&fit=crop&w=500&q=80" alt="Weather Dashboard"/>
+          <div class="project-content">
+            <div class="project-title">Weather Dashboard</div>
+            <div class="tags"><span class="tag">API</span><span class="tag">Charts</span></div>
+            <div class="project-desc">A responsive dashboard fetching live weather data via API.</div>
+            <a class="project-link" href="#">View Project</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact">
+      <h2 class="section-title">Contact</h2>
+      <form>
+        <input type="text" placeholder="Your Name" required/>
+        <input type="email" placeholder="Your Email" required/>
+        <textarea placeholder="Your Message" required></textarea>
+        <button type="submit">Send</button>
+      </form>
+    </section>
+  </div>
+
+  <footer>
+    &copy; 2025 Gayathri G. All rights reserved.
+    <div class="socials">
+      <a href="#">🐦</a>
+      <a href="#">💼</a>
+      <a href="#">📷</a>
+      <a href="#">💻</a>
+    </div>
+  </footer>
+
+  <script>
+    // Dark mode toggle
+    const toggle = document.getElementById("themeToggle");
+    toggle.addEventListener("click", () => {
+      document.body.dataset.theme =
+        document.body.dataset.theme === "dark" ? "light" : "dark";
+      toggle.textContent =
+        document.body.dataset.theme === "dark" ? "☀️" : "🌙";
+    });
+
+    // Typing effect
+    const typingEl = document.getElementById("typing");
+    const roles = ["Full Stack Developer", "UI Enthusiast", "Problem Solver"];
+    let i = 0, j = 0, current = "", deleting = false;
+    function type() {
+      if (!deleting && j < roles[i].length) {
+        current += roles[i][j++];
+      } else if (deleting && j > 0) {
+        current = current.slice(0, --j);
+      } else if (!deleting && j === roles[i].length) {
+        deleting = true; setTimeout(type, 1000); return;
+      } else if (deleting && j === 0) {
+        deleting = false; i = (i + 1) % roles.length;
+      }
+      typingEl.textContent = current;
+      setTimeout(type, deleting ? 60 : 120);
+    }
+    type();
+  </script>
+</body>
+</html>

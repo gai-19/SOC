@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>IRCTC — Mock Train Search</title>
+  <style>
+    :root{
+      --primary:#0057b7;
+      --accent:#00a86b;
+      --muted:#6b7280;
+      --card:#ffffff;
+      --bg:#f3f6fb;
+      --glass: rgba(255,255,255,0.85);
+      --radius:12px;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      background: linear-gradient(180deg, #eef5ff 0%, var(--bg) 100%);
+      color:#0b1220;
+      padding:28px;
+      -webkit-font-smoothing:antialiased;
+    }
+
+    header{
+      display:flex;
+      gap:18px;
+      align-items:center;
+      margin-bottom:18px;
+    }
+    .logo{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      background:var(--card);
+      padding:10px 14px;
+      border-radius:14px;
+      box-shadow:0 6px 18px rgba(9,30,66,0.06);
+    }
+    .logo .dot{
+      width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,var(--primary),#2e7be6);
+      display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;
+      font-size:16px;
+    }
+    h1{font-size:18px;margin:0}
+    p.lead{margin:0;color:var(--muted);font-size:13px}
+
+    .container{
+      display:grid;
+      grid-template-columns: 380px 1fr;
+      gap:20px;
+      align-items:start;
+    }
+
+    /* SEARCH CARD */
+    .card{
+      background:var(--glass);
+      padding:16px;
+      border-radius:var(--radius);
+      box-shadow:0 8px 30px rgba(15,23,42,0.06);
+      backdrop-filter: blur(6px);
+    }
+    .form-row{
+      display:flex;
+      gap:10px;
+      margin-bottom:10px;
+    }
+    label{
+      display:block;
+      font-size:12px;
+      color:var(--muted);
+      margin-bottom:6px;
+    }
+    input[type="text"], input[type="date"], select{
+      width:100%;
+      padding:10px 12px;
+      border-radius:8px;
+      border:1px solid #e6e9ee;
+      background:#fff;
+      font-size:14px;
+    }
+    .swap-btn{
+      align-self:end;
+      background:#fff;border-radius:50%;width:36px;height:36px;border:1px solid #e6e9ee;
+      display:flex;align-items:center;justify-content:center;cursor:pointer;
+    }
+
+    .btn{
+      display:inline-block;padding:10px 14px;border-radius:10px;border:0;background:var(--primary);color:#fff;font-weight:600;cursor:pointer;
+      box-shadow:0 6px 16px rgba(2,88,176,0.12);
+    }
+    .btn.secondary{background:#fff;color:var(--primary);border:1px solid rgba(0,87,183,0.12)}
+
+    /* RESULTS */
+    .results-header{
+      display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;
+    }
+    .result-list{display:flex;flex-direction:column;gap:12px}
+    .train{
+      background:var(--card);
+      padding:12px;border-radius:12px;border:1px solid #eef2f7;
+      display:flex;gap:12px;align-items:center;justify-content:space-between;
+    }
+    .train .left{display:flex;gap:12px;align-items:center}
+    .code{
+      background:linear-gradient(180deg,#f5f9ff,#eef6ff);
+      padding:10px;border-radius:10px;font-weight:700;color:var(--primary);
+      min-width:90px;text-align:center;
+    }
+    .train h3{margin:0;font-size:15px}
+    .sub{color:var(--muted);font-size:13px;margin-top:6px}
+    .meta{font-size:13px;color:#0b1220}
+    .price{font-weight:700;font-size:16px;color:var(--accent)}
+    .actions{display:flex;gap:8px;align-items:center}
+
+    /* modal */
+    .overlay{
+      position:fixed;inset:0;background:rgba(8,15,25,0.45);display:none;align-items:center;justify-content:center;padding:20px;
+    }
+    .modal{
+      width:680px;max-width:100%;background:#fff;border-radius:14px;padding:18px;box-shadow:0 20px 60px rgba(11,22,41,0.35);
+    }
+    .modal header{display:flex;align-items:center;justify-content:space-between}
+    .close{background:#f3f5f8;border-radius:8px;padding:6px 8px;cursor:pointer}
+
+    /* responsive */
+    @media (max-width:920px){
+      .container{grid-template-columns:1fr; }
+      .logo h1{font-size:16px}
+    }
+    footer{margin-top:18px;color:var(--muted);font-size:13px}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo" aria-hidden="false">
+      <div class="dot">IR</div>
+      <div>
+        <h1>IRCTC — Mock</h1>
+        <p class="lead">Train search & demo booking UI (client-side)</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="container" role="main">
+    <!-- LEFT: Search -->
+    <section class="card" aria-labelledby="search-heading">
+      <h2 id="search-heading" style="font-size:16px;margin:0 0 8px 0">Search Trains</h2>
+
+      <div class="form-row">
+        <div style="flex:1">
+          <label for="from">From</label>
+          <input id="from" type="text" placeholder="Eg: New Delhi (NDLS)" value="New Delhi" />
+        </div>
+        <div style="flex:1">
+          <label for="to">To</label>
+          <input id="to" type="text" placeholder="Eg: Mumbai Central (BCT)" value="Mumbai Central" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div style="flex:1">
+          <label for="date">Journey Date</label>
+          <input id="date" type="date" aria-label="Journey date" />
+        </div>
+        <div style="flex:1">
+          <label for="cls">Class</label>
+          <select id="cls" aria-label="Travel class">
+            <option value="SL">Sleeper (SL)</option>
+            <option value="3A">3A (AC 3 Tier)</option>
+            <option value="2A">2A (AC 2 Tier)</option>
+            <option value="1A">1A (AC 1 Tier)</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:8px;align-items:center;margin-top:8px">
+        <button id="searchBtn" class="btn" aria-label="Search trains">Search</button>
+        <button id="clearBtn" class="btn secondary" aria-label="Clear search">Clear</button>
+      </div>
+
+      <hr style="margin:14px 0;border:none;border-top:1px solid #eef3fb" />
+
+      <div>
+        <h3 style="margin:0 0 8px 0;font-size:14px">Quick Filters</h3>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn secondary filter-btn" data-filter="all">All</button>
+          <button class="btn secondary filter-btn" data-filter="morning">Morning (6–12)</button>
+          <button class="btn secondary filter-btn" data-filter="afternoon">Afternoon (12–18)</button>
+          <button class="btn secondary filter-btn" data-filter="night">Night (18–6)</button>
+          <button class="btn secondary filter-btn" data-filter="ac">AC Only</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT: Results -->
+    <section>
+      <div class="card" style="padding-bottom:12px">
+        <div class="results-header">
+          <div>
+            <strong id="resultsCount">0</strong> trains found
+            <div style="color:var(--muted);font-size:13px">Showing results for: <span id="summaryText">—</span></div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <label for="sortSelect" style="font-size:13px;color:var(--muted);margin-right:6px">Sort</label>
+            <select id="sortSelect" aria-label="Sort results">
+              <option value="departure">Departure time</option>
+              <option value="duration">Duration</option>
+              <option value="price">Lowest price</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="result-list" id="results" aria-live="polite">
+          <!-- trains inserted here -->
+        </div>
+
+        <footer>
+          <small>Demo app — not connected to IRCTC. Replace sample data with real API responses for production.</small>
+        </footer>
+      </div>
+    </section>
+  </main>
+
+  <!-- Booking modal -->
+  <div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal" role="document" aria-labelledby="modalTitle">
+      <header>
+        <h3 id="modalTitle">Book Ticket</h3>
+        <button class="close" id="closeModal" aria-label="Close">✕</button>
+      </header>
+
+      <section id="bookingContent" style="margin-top:12px">
+        <!-- dynamic content -->
+      </section>
+
+      <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:14px">
+        <button class="btn secondary" id="cancelBooking">Cancel</button>
+        <button class="btn" id="confirmBooking">Confirm & Reserve</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // -------------------------
+    // Sample train dataset (client-side mock)
+    // -------------------------
+    const sampleTrains = [
+      {
+        number: "12951",
+        name: "Bandra Rajdhani",
+        from: "New Delhi (NDLS)",
+        to: "Mumbai Central (BCT)",
+        dep: "06:30",
+        arr: "15:45",
+        duration: "9h 15m",
+        classes: ["1A","2A","3A","SL"],
+        price: { "1A": 4500, "2A":3000, "3A":2100, "SL":650 },
+        stops: 3
+      },
+      {
+        number: "12321",
+        name: "Shatabdi Express",
+        from: "New Delhi (NDLS)",
+        to: "Agra Cantt (AGC)",
+        dep: "08:00",
+        arr: "10:05",
+        duration: "2h 5m",
+        classes: ["CC","EC"],
+        price: { "CC":800, "EC":1400 },
+        stops: 0
+      },
+      {
+        number: "19027",
+        name: "Mumbai Superfast",
+        from: "New Delhi (NDLS)",
+        to: "Mumbai Central (BCT)",
+        dep: "21:10",
+        arr: "07:00",
+        duration: "9h 50m",
+        classes: ["3A","SL"],
+        price: { "3A":1800, "SL":500 },
+        stops: 5
+      },
+      {
+        number: "12207",
+        name: "Rajdhani Express",
+        from: "New Delhi (NDLS)",
+        to: "Bhubaneswar (BBS)",
+        dep: "16:40",
+        arr: "06:20",
+        duration: "13h 40m",
+        classes: ["1A","2A","3A"],
+        price: { "1A":5200,"2A":3400,"3A":2200 },
+        stops: 6
+      }
+    ];
+
+    // -------------------------
+    // Utilities
+    // -------------------------
+    const $ = id => document.getElementById(id);
+    const resultsEl = $("results");
+    const resultsCount = $("resultsCount");
+    const summaryText = $("summaryText");
+    const overlay = $("overlay");
+    const bookingContent = $("bookingContent");
+    const dateInput = $("date");
+
+    // default date -> today
+    const todayISO = new Date().toISOString().slice(0,10);
+    dateInput.value = todayISO;
+
+    // render train cards
+    function renderTrains(list){
+      resultsEl.innerHTML = "";
+      if (!list.length) {
+        resultsEl.innerHTML = "<div style='padding:18px;color:var(--muted)'>No trains found for selected route/date.</div>";
+      }
+      list.forEach(train => {
+        const div = document.createElement("div");
+        div.className = "train";
+        div.innerHTML = `
+          <div class="left">
+            <div class="code">
+              <div style="font-size:13px">${train.number}</div>
+              <div style="font-size:12px;color:var(--muted)">${train.name.split(' ')[0]}</div>
+            </div>
+            <div>
+              <h3>${train.name}</h3>
+              <div class="sub">${train.from} → ${train.to} • ${train.stops} stops</div>
+              <div class="sub" style="margin-top:6px"><span class="meta">Dep: ${train.dep}</span> • <span class="meta">Arr: ${train.arr}</span> • <span class="meta">${train.duration}</span></div>
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:16px">
+            <div style="text-align:right">
+              <div style="font-size:12px;color:var(--muted)">From</div>
+              <div class="price">₹${lowestPrice(train)}</div>
+              <div style="font-size:12px;color:var(--muted);margin-top:6px">${train.classes.join(' · ')}</div>
+            </div>
+            <div class="actions">
+              <button class="btn" data-action="book" data-number="${train.number}">Book</button>
+            </div>
+          </div>
+        `;
+        resultsEl.appendChild(div);
+      });
+      resultsCount.textContent = list.length;
+    }
+
+    // compute lowest price shown
+    function lowestPrice(train){
+      const vals = Object.values(train.price || {});
+      if (!vals.length) return "--";
+      return Math.min(...vals);
+    }
+
+    // initial render: show all trains that match sample from-to by default
+    function initialSearch(){
+      const fromVal = $("from").value.trim();
+      const toVal = $("to").value.trim();
+      summaryText.textContent = `${fromVal} → ${toVal} on ${$("date").value}`;
+      // simple filtering by 'from' and 'to' substring match
+      const filtered = sampleTrains.filter(t =>
+        t.from.toLowerCase().includes(fromVal.toLowerCase()) &&
+        t.to.toLowerCase().includes(toVal.toLowerCase())
+      );
+      renderTrains(filtered);
+    }
+
+    // sort helper
+    function sortTrains(list, by){
+      const copy = [...list];
+      if (by==='departure'){
+        copy.sort((a,b)=> timeToMinutes(a.dep)-timeToMinutes(b.dep));
+      } else if (by==='duration'){
+        copy.sort((a,b)=> durationToMins(a.duration)-durationToMins(b.duration));
+      } else if (by==='price'){
+        copy.sort((a,b)=> lowestPrice(a)-lowestPrice(b));
+      }
+      return copy;
+    }
+
+    function timeToMinutes(t){
+      // "HH:MM"
+      const [h,m] = t.split(":").map(Number); return h*60 + m;
+    }
+    function durationToMins(d){
+      // "9h 15m" or "2h 5m"
+      const hMatch = d.match(/(\d+)h/);
+      const mMatch = d.match(/(\d+)m/);
+      const h = hMatch ? Number(hMatch[1]) : 0;
+      const m = mMatch ? Number(mMatch[1]) : 0;
+      return h*60 + m;
+    }
+
+    // filter quick filters
+    function applyQuickFilter(list, filterKey){
+      if (!filterKey || filterKey==="all") return list;
+      const now = new Date();
+      if (filterKey==="ac"){
+        return list.filter(t => Object.keys(t.price).some(c => /A|AC|1A|2A|3A/.test(c)));
+      }
+      if (filterKey==="morning"){
+        return list.filter(t => {
+          const m = timeToMinutes(t.dep); return m>=360 && m<720;
+        });
+      }
+      if (filterKey==="afternoon"){
+        return list.filter(t => {
+          const m = timeToMinutes(t.dep); return m>=720 && m<1080;
+        });
+      }
+      if (filterKey==="night"){
+        return list.filter(t => {
+          const m = timeToMinutes(t.dep); return (m>=1080) || (m<360);
+        });
+      }
+      return list;
+    }
+
+    // handle search button
+    $("searchBtn").addEventListener("click", ()=>{
+      const fromVal = $("from").value.trim();
+      const toVal = $("to").value.trim();
+      const cls = $("cls").value;
+      const date = $("date").value;
+      summaryText.textContent = `${fromVal} → ${toVal} on ${date}`;
+      let filtered = sampleTrains.filter(t =>
+        t.from.toLowerCase().includes(fromVal.toLowerCase()) &&
+        t.to.toLowerCase().includes(toVal.toLowerCase())
+      );
+      // filter by class availability if selected
+      if (cls){
+        filtered = filtered.filter(t => t.classes.includes(cls) || Object.keys(t.price).includes(cls));
+      }
+      // apply current sort
+      const sortBy = $("sortSelect").value;
+      filtered = sortTrains(filtered, sortBy);
+      renderTrains(filtered);
+      // scroll results into view
+      resultsEl.scrollIntoView({behavior:'smooth', block:'start'});
+    });
+
+    // clear button
+    $("clearBtn").addEventListener("click", ()=>{
+      $("from").value = "";
+      $("to").value = "";
+      dateInput.value = todayISO;
+      $("cls").value = "SL";
+      summaryText.textContent = "—";
+      renderTrains([]);
+      resultsCount.textContent = 0;
+    });
+
+    // sort change
+    $("sortSelect").addEventListener("change", ()=>{
+      // re-run search click behavior to apply sort
+      $("searchBtn").click();
+    });
+
+    // quick filter buttons
+    document.querySelectorAll(".filter-btn").forEach(btn=>{
+      btn.addEventListener("click", (e)=>{
+        const key = btn.dataset.filter;
+        // run base filtered query first (from/to)
+        const fromVal = $("from").value.trim();
+        const toVal = $("to").value.trim();
+        let filtered = sampleTrains.filter(t =>
+          t.from.toLowerCase().includes(fromVal.toLowerCase()) &&
+          t.to.toLowerCase().includes(toVal.toLowerCase())
+        );
+        filtered = applyQuickFilter(filtered, key);
+        filtered = sortTrains(filtered, $("sortSelect").value);
+        renderTrains(filtered);
+      })
+    });
+
+    // Book button (event delegation)
+    resultsEl.addEventListener("click", (e)=>{
+      const btn = e.target.closest("[data-action='book']");
+      if (!btn) return;
+      const number = btn.dataset.number;
+      const train = sampleTrains.find(t => t.number===number);
+      openBookingModal(train);
+    });
+
+    // open booking modal with a simple form
+    function openBookingModal(train){
+      overlay.style.display = "flex";
+      overlay.setAttribute("aria-hidden","false");
+      bookingContent.innerHTML = `
+        <div style="display:flex;gap:14px;align-items:center">
+          <div style="flex:1">
+            <h4 style="margin:0">${train.name} • ${train.number}</h4>
+            <div style="color:var(--muted);margin-top:6px">${train.from} → ${train.to}</div>
+            <div style="margin-top:8px;font-size:13px;color:var(--muted)">Dep: ${train.dep} • Arr: ${train.arr} • ${train.duration}</div>
+          </div>
+
+          <div style="text-align:right">
+            <div style="color:var(--muted);font-size:13px">Lowest fare</div>
+            <div style="font-weight:800;font-size:18px;margin-top:6px">₹${lowestPrice(train)}</div>
+          </div>
+        </div>
+
+        <hr style="margin:10px 0;border:none;border-top:1px solid #eef3fb" />
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div>
+            <label for="pname">Passenger Name</label>
+            <input id="pname" type="text" placeholder="Full name" />
+          </div>
+          <div>
+            <label for="page">Age</label>
+            <input id="page" type="text" placeholder="Eg: 28" />
+          </div>
+          <div>
+            <label for="pclass">Select Class</label>
+            <select id="pclass">${train.classes.map(c=>`<option value="${c}">${c} — ₹${train.price[c] ?? 'N/A'}</option>`).join('')}</select>
+          </div>
+          <div>
+            <label for="pquota">Quota</label>
+            <select id="pquota">
+              <option>General</option>
+              <option>Tatkal</option>
+              <option>Senior Citizen</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="margin-top:10px;color:var(--muted);font-size:13px">
+          <strong>Note:</strong> This is a demo reservation. No PNR is generated. Connect to a backend API to create reservations and handle payment.
+        </div>
+      `;
+
+      // attach confirm handler with closure to pass train
+      const confirmBtn = $("confirmBooking");
+      const cancelBtn = $("cancelBooking");
+      const closeBtn = $("closeModal");
+
+      function doConfirm(){
+        const pname = $("pname").value.trim();
+        const page = $("page").value.trim();
+        const pclass = $("pclass").value;
+        if (!pname || !page) {
+          alert("Please enter passenger name and age.");
+          return;
+        }
+        // demo confirm
+        alert(`Reserved (demo):\nTrain ${train.number} ${train.name}\nPassenger: ${pname}, Age ${page}\nClass: ${pclass}`);
+        closeOverlay();
+      }
+
+      confirmBtn.onclick = doConfirm;
+      cancelBtn.onclick = closeOverlay;
+      closeBtn.onclick = closeOverlay;
+    }
+
+    function closeOverlay(){
+      overlay.style.display = "none";
+      overlay.setAttribute("aria-hidden","true");
+    }
+
+    $("closeModal").addEventListener("click", closeOverlay);
+
+    // helper: initialize on load
+    document.addEventListener("DOMContentLoaded", ()=>{
+      // initial rendering using current input values
+      initialSearch();
+    });
+
+    // accessibility: close modal with Escape
+    document.addEventListener("keydown", (e)=>{
+      if (e.key === 'Escape') closeOverlay();
+    });
+
+  </script>
+</body>
+</html>
